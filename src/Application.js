@@ -6,36 +6,14 @@ import { useEffect, useState } from "react";
 import TreeMenu from "react-simple-tree-menu";
 // import default minimal styling or your own styling
 import "../node_modules/react-simple-tree-menu/dist/main.css";
+import ChessTrie from "./ChessTrie";
+import type { TTreeMenuData } from "./ChessTrie";
 
 type TGameData = {
   played_as: "black" | "white",
   end_time: number,
   moves: Array<string>,
 };
-
-const fakeTreeData = [
-  {
-    key: "first-level-node-1",
-    label: "Node 1 at the first level",
-    nodes: [
-      {
-        key: "second-level-node-1",
-        label: "Node 1 at the second level",
-        nodes: [
-          {
-            key: "third-level-node-1",
-            label: "Last node of the branch",
-            nodes: [], // you can remove the nodes property or leave it as an empty array
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: "first-level-node-2",
-    label: "Node 2 at the first level",
-  },
-];
 
 function convertPGNToMoves(raw_pgn: string): Array<string> {
   const maybe_pgn = raw_pgn.match(/1\. .*/);
@@ -88,10 +66,27 @@ async function fetchAllGames(username: string): Promise<Array<TGameData>> {
 
 export default function Application(): React$Node {
   const [username, setUsername] = useState("pranetverma");
-  const [allGames, setAllGames] = useState(null);
+  const [numGames, setNumGames] = useState(50);
+  const [playedAs, setPlayedAs] = useState("white");
+  const [allGames, setAllGames] = useState([]);
+  const [treeData, setTreeData] = useState<TTreeMenuData>({});
 
   useEffect(() => {
     fetchAllGames(username).then((games) => setAllGames(games));
   }, [username]);
-  return <TreeMenu data={fakeTreeData} />;
+
+  useEffect(() => {
+    const chessTrie = new ChessTrie();
+    console.log("Making trie");
+    allGames
+      .filter((game) => {
+        return game.played_as === playedAs;
+      })
+      .slice(0, numGames)
+      .forEach((game) => chessTrie.addGame(game.moves));
+
+    setTreeData(chessTrie.convertToTreeMenu());
+    console.log("Made trie");
+  }, [allGames, playedAs, numGames]);
+  return <TreeMenu data={treeData.nodes} />;
 }
