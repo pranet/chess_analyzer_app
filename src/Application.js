@@ -91,7 +91,7 @@ export default function Application(): React$Node {
   const [allGames, setAllGames] = useState(null);
 
   useEffect(() => {
-    setAllGames(fetchAllGames(username));
+    fetchAllGames(username).then((games) => setAllGames(games));
   }, [username]);
   return <TreeMenu data={fakeTreeData} />;
 }
