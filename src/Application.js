@@ -44,16 +44,17 @@ async function fetchAllGames(username: string): Promise<Array<TGameData>> {
 
   const archive_json = await archive_response.json();
   const archive_urls: Array<string> = archive_json["archives"];
-  const all_games = (
-    await Promise.all(
-      archive_urls.map(async (archive_url) => {
-        const games_response = await fetch(archive_url);
-        const games_json = await games_response.json();
-        return games_json["games"];
-      })
-    )
-  )
-    .flat()
+
+  // this is deliberately sequential because parallel fetches are missing cors
+  // headers for some reason.
+  // https://www.chess.com/clubs/forum/view/cors-error-while-requesting-games
+  const all_games = [];
+  for (const archive_url of archive_urls) {
+    const games_response = await fetch(archive_url);
+    const games_json = await games_response.json();
+    all_games.push(...games_json["games"]);
+  }
+  return all_games
     .map((game_data) => {
       return {
         played_as:
@@ -63,7 +64,6 @@ async function fetchAllGames(username: string): Promise<Array<TGameData>> {
       };
     })
     .sort((left, right) => right.end_time - left.end_time);
-  return all_games;
 }
 
 export default function Application(): React$Node {
