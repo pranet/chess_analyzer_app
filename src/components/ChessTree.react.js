@@ -32,5 +32,5 @@ export default function ChessTree(props: Props): React$Node {
 
     setTreeData(chessTrie.convertToTreeMenu());
   }, [props.allGames, props.playedAs, props.numGames]);
-  return <TreeMenu data={treeData.nodes} />;
+  return <TreeMenu data={treeData.nodes} hasSearch={false} />;
 }
