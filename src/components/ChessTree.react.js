@@ -44,7 +44,7 @@ export default function ChessTree(props: Props): React$Node {
       x: dimensions.width / 2,
       y: dimensions.height / 2,
     });
-  }, []);
+  }, [ref]);
 
   return (
     <div id="treeWrapper" style={{ width: "50em", height: "20em" }} ref={ref}>
