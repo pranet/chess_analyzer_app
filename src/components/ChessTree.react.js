@@ -32,7 +32,7 @@ export default function ChessTree(props: Props): React$Node {
   }, [props.allGames, props.playedAs, props.numGames]);
   return (
     <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
-      <Tree data={treeData} hasSearch={false} />
+      <Tree data={treeData} initialDepth={1} orientation={"vertical"} />
     </div>
   );
 }

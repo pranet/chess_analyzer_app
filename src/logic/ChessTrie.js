@@ -57,7 +57,10 @@ export default class ChessTrie {
     }
     return {
       children: children_as_tree_menu,
-      name: `${curr.label} -> ${curr.frequency}`,
+      name: `${curr.label}`,
+      attributes: {
+        frequency: curr.frequency,
+      },
     };
   }
 }
