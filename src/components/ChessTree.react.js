@@ -18,7 +18,11 @@ type Props = {
 
 export default function ChessTree(props: Props): React$Node {
   const [treeData, setTreeData] = useState<TTreeMenuData>({});
-
+  const [translate, setTranslate] = useState<{ x: number, y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const ref = React.createRef();
   useEffect(() => {
     const chessTrie = new ChessTrie();
     props.allGames
@@ -30,9 +34,25 @@ export default function ChessTree(props: Props): React$Node {
 
     setTreeData(chessTrie.convertToTreeMenu());
   }, [props.allGames, props.playedAs, props.numGames]);
+
+  useEffect(() => {
+    const dimensions = ref.current?.getBoundingClientRect();
+    if (dimensions == null) {
+      return;
+    }
+    setTranslate({
+      x: dimensions.width / 2,
+      y: dimensions.height / 2,
+    });
+  }, []);
   return (
-    <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
-      <Tree data={treeData} initialDepth={1} orientation={"vertical"} />
+    <div id="treeWrapper" style={{ width: "50em", height: "20em" }} ref={ref}>
+      <Tree
+        data={treeData}
+        initialDepth={1}
+        orientation={"vertical"}
+        translate={translate}
+      />
     </div>
   );
 }
