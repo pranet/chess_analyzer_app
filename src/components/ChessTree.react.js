@@ -45,6 +45,7 @@ export default function ChessTree(props: Props): React$Node {
       y: dimensions.height / 2,
     });
   }, []);
+
   return (
     <div id="treeWrapper" style={{ width: "50em", height: "20em" }} ref={ref}>
       <Tree
@@ -52,6 +53,7 @@ export default function ChessTree(props: Props): React$Node {
         initialDepth={1}
         orientation={"vertical"}
         translate={translate}
+        zoom={0.5}
       />
     </div>
   );
