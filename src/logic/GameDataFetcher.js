@@ -12,7 +12,7 @@ function convertPGNToMoves(raw_pgn: string): Array<string> {
     return [];
   }
   const pgn_without_timestamps = maybe_pgn.toString().replace(/{.*?}/g, "");
-  const moves = pgn_without_timestamps.match(/[a-zA-Z]+[\d]?[#\+]?[\-]?[O]?/g);
+  const moves = pgn_without_timestamps.match(/[a-zA-Z]+[\d]?[#+]?[-]?[O]?/g);
   if (moves === null) {
     return [];
   }
