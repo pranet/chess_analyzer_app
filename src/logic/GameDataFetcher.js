@@ -1,15 +1,6 @@
 // @flow
 
-import React from "react";
-import { useEffect, useState } from "react";
-
-import TreeMenu from "react-simple-tree-menu";
-// import default minimal styling or your own styling
-import "../node_modules/react-simple-tree-menu/dist/main.css";
-import ChessTrie from "./ChessTrie";
-import type { TTreeMenuData } from "./ChessTrie";
-
-type TGameData = {
+export type TGameData = {
   played_as: "black" | "white",
   end_time: number,
   moves: Array<string>,
@@ -35,7 +26,9 @@ function convertPGNToMoves(raw_pgn: string): Array<string> {
   return result;
 }
 
-async function fetchAllGames(username: string): Promise<Array<TGameData>> {
+export default async function fetchAllGames(
+  username: string
+): Promise<Array<TGameData>> {
   const archive_response = await fetch(
     `https://api.chess.com/pub/player/${username}/games/archives`
   );
@@ -62,31 +55,4 @@ async function fetchAllGames(username: string): Promise<Array<TGameData>> {
       };
     })
     .sort((left, right) => right.end_time - left.end_time);
-}
-
-export default function Application(): React$Node {
-  const [username, setUsername] = useState("pranetverma");
-  const [numGames, setNumGames] = useState(50);
-  const [playedAs, setPlayedAs] = useState("white");
-  const [allGames, setAllGames] = useState([]);
-  const [treeData, setTreeData] = useState<TTreeMenuData>({});
-
-  useEffect(() => {
-    fetchAllGames(username).then((games) => setAllGames(games));
-  }, [username]);
-
-  useEffect(() => {
-    const chessTrie = new ChessTrie();
-    console.log("Making trie");
-    allGames
-      .filter((game) => {
-        return game.played_as === playedAs;
-      })
-      .slice(0, numGames)
-      .forEach((game) => chessTrie.addGame(game.moves));
-
-    setTreeData(chessTrie.convertToTreeMenu());
-    console.log("Made trie");
-  }, [allGames, playedAs, numGames]);
-  return <TreeMenu data={treeData.nodes} />;
 }
