@@ -7,9 +7,7 @@ import ChessTrie from "../logic/ChessTrie";
 
 import React from "react";
 import { useEffect, useState } from "react";
-import TreeMenu from "react-simple-tree-menu";
-// import default minimal styling or your own styling
-import "../../node_modules/react-simple-tree-menu/dist/main.css";
+import Tree from "react-d3-tree";
 
 type Props = {
   allGames: Array<TGameData>,
@@ -32,5 +30,9 @@ export default function ChessTree(props: Props): React$Node {
 
     setTreeData(chessTrie.convertToTreeMenu());
   }, [props.allGames, props.playedAs, props.numGames]);
-  return <TreeMenu data={treeData.nodes} hasSearch={false} />;
+  return (
+    <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
+      <Tree data={treeData} hasSearch={false} />
+    </div>
+  );
 }

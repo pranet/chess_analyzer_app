@@ -1,9 +1,8 @@
 // @flow
 
 export type TTreeMenuData = {
-  key: string,
-  label: string,
-  nodes: Array<TTreeMenuData>,
+  name: string,
+  children: Array<TTreeMenuData>,
 };
 
 class ChessTrieNode {
@@ -57,11 +56,8 @@ export default class ChessTrie {
       children_as_tree_menu.push(this.convertToTreeMenu(val, depth + 1));
     }
     return {
-      nodes: children_as_tree_menu,
-      key: `${depth}.${curr.label}.${curr.frequency}.${Math.floor(
-        Math.random() * 1000000
-      )}`,
-      label: `${curr.label} -> ${curr.frequency}`,
+      children: children_as_tree_menu,
+      name: `${curr.label} -> ${curr.frequency}`,
     };
   }
 }
