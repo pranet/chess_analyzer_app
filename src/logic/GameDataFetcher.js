@@ -16,12 +16,11 @@ function convertPGNToMoves(raw_pgn: string): Array<string> {
   if (moves === null) {
     return [];
   }
-  if (moves.length % 2 === 1) {
-    moves.push("NAN");
-  }
   const result = [];
-  for (var i = 0; i < moves.length / 2; i += 1) {
-    result.push(`${i + 1}. ${moves[2 * i]} ${moves[2 * i + 1]} `);
+  for (var i = 0; i < moves.length; i += 1) {
+    result.push(
+      `${Math.floor(i / 2) + 1}.${i % 2 === 0 ? "" : ".."} ${moves[i]}`
+    );
   }
   return result;
 }
